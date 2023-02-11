@@ -12,19 +12,19 @@ contract SimpleStorage {
 
     People[] public persons;
 
-    mapping(string => uint32) public getNumber;
+    mapping(string => uint32) public getPersonNumber;
 
-    function storeNumber(uint32 _stNum) public {
+    function storeNum(uint32 _stNum) public {
         stNum = _stNum;
     }
 
-    function retrieveNumStr() public view returns (uint32) {
+    function getNum() public view returns (uint32) {
         return stNum;
     }
 
     function addPeople(string memory person_name, uint32 person_number) public {
         persons.push(People(person_name, person_number));
 
-        getNumber[person_name] = person_number;
+        getPersonNumber[person_name] = person_number;
     }
 }
