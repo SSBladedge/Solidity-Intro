@@ -2,35 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-interface AggregatorV3Interface {
-    function decimals() external view returns (uint8);
-
-    function description() external view returns (string memory);
-
-    function version() external view returns (uint256);
-
-    function getRoundData(uint80 _roundId)
-        external
-        view
-        returns (
-            uint80 roundId,
-            int256 answer,
-            uint256 startedAt,
-            uint256 updatedAt,
-            uint80 answeredInRound
-        );
-
-    function latestRoundData()
-        external
-        view
-        returns (
-            uint80 roundId,
-            int256 answer,
-            uint256 startedAt,
-            uint256 updatedAt,
-            uint80 answeredInRound
-        );
-}
+import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
 contract FundMe {
     mapping(address => uint256) public amountFunded2Address;
@@ -38,4 +10,27 @@ contract FundMe {
     function fund() public payable {
         amountFunded2Address[msg.sender] += msg.value;
     }
+
+    function getVersion() public view returns (uint256) {
+        AggregatorV3Interface priceFeed = AggregatorV3Interface(
+            0x694AA1769357215DE4FAC081bf1f309aDC325306
+        );
+        return priceFeed.version();
+    }
+
+    function getPrice() public view returns (uint256) {
+        AggregatorV3Interface priceFeed = AggregatorV3Interface(
+            0x694AA1769357215DE4FAC081bf1f309aDC325306
+        );
+        (, int256 answer, , , ) = priceFeed.latestRoundData();
+
+        return uint256(answer);
+    }
 }
+
+//Decimals do not work in solidity, so the value returned is multiplied by 10 to a number
+//Sepolia is used above
+
+//getVersion = 4
+//getPrice = 164194000000 to 8 decimals
+//         = 1641.94000000
